@@ -98,3 +98,9 @@ class OrderView(View):
                 "orders/order_form.html",
                 {"form": form, "error": "Invalid form data"},
             )
+
+
+class OrderDetailView(View):
+    def get(self, request, slug):
+        order = Order.objects.get(slug=slug)
+        return render(request, "orders/order_detail.html", {"order": order})
