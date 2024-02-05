@@ -11,26 +11,20 @@ class Order(models.Model):
     end_timestamp = models.BigIntegerField()
     user_email = models.EmailField()
     user_name = models.CharField(max_length=255)
-    cell_id = models.PositiveIntegerField
+    cell_id = models.PositiveIntegerField()
     reminded = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property
     def start_datetime(self):
-        return (
-            timezone
-            .datetime
-            .fromtimestamp(self.start_timestamp)
-            .strftime("%d.%m.%y %H:%M")
+        return timezone.datetime.fromtimestamp(self.start_timestamp).strftime(
+            "%d.%m.%y %H:%M"
         )
 
     @property
     def end_datetime(self):
-        return (
-            timezone
-            .datetime
-            .fromtimestamp(self.end_timestamp)
-            .strftime("%d.%m.%y %H:%M")
+        return timezone.datetime.fromtimestamp(self.end_timestamp).strftime(
+            "%d.%m.%y %H:%M"
         )
 
     def __str__(self):

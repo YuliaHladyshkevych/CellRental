@@ -15,5 +15,5 @@ class OrderSerializer(serializers.ModelSerializer):
             "user_name",
             "cell_id",
             "reminded",
-            "created_at"
+            "created_at",
         )
