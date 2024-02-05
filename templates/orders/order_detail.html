@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Order Detail:</h1>
+  <div class="order-detail">
+    <div>
+      <h3>ID:</h3>
+      <p>{{ order.id }}</p>
+    </div>
+    <div>
+      <h3>User Info:</h3>
+      <p>{{ order.user_name }} ({{ order.user_email }})</p>
+    </div>
+    <div>
+      <h3>Start Date:</h3>
+      <p>{{ order.start_datetime }}</p>
+    </div>
+    <div>
+      <h3>End Date:</h3>
+      <p>{{ order.end_datetime }}</p>
+    </div>
+    <div>
+      <h3>Cell ID:</h3>
+      <p>{{ order.cell_id }}</p>
+    </div>
+  </div>
+{% endblock %}
