@@ -1,10 +1,39 @@
 import requests
+from django.shortcuts import render, redirect
 from django.utils import timezone
+from django.views import View
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
+from orders.forms import OrderForm
 from orders.models import Order
 from orders.serializers import OrderSerializer
+
+
+def get_random_cell_id():
+    response = requests.get("https://csrng.net/csrng/csrng.php?min=1&max=50")
+    data_list = response.json()
+    if data_list:
+        first_dict = data_list[0]
+        cell_id = first_dict.get("random")
+        return cell_id
+    else:
+        return Response(
+            {"error": "Invalid response format"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+
+def validate_timestamps(start_timestamp, end_timestamp):
+    if (
+        int(end_timestamp) <= int(start_timestamp)
+        or int(start_timestamp) <= timezone.now().timestamp()
+    ):
+        return Response(
+            {"error": "Invalid timestamps"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    return None
 
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -27,30 +56,12 @@ class OrderViewSet(viewsets.ModelViewSet):
                 {"error": "Invalid input data"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-        # Get random cell_id
-        response = requests.get(
-            "https://csrng.net/csrng/csrng.php?min=1&max=50"
+        cell_id = get_random_cell_id()
+        validation_timestamps = validate_timestamps(
+            start_timestamp, end_timestamp
         )
-        data_list = response.json()
-        if data_list:
-            first_dict = data_list[0]
-            cell_id = first_dict.get("random")
-        else:
-            return Response(
-                {"error": "Invalid response format"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # Validate timestamps
-        if (
-            int(end_timestamp) <= int(start_timestamp)
-            or int(end_timestamp) <= timezone.now().timestamp()
-        ):
-            return Response(
-                {"error": "Invalid timestamps"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        if validation_timestamps:
+            return validation_timestamps
 
         # Create Order object
         order_data = {
@@ -67,3 +78,23 @@ class OrderViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class OrderView(View):
+    def get(self, request):
+        form = OrderForm()
+        return render(request, "orders/order_form.html", {"form": form})
+
+    def post(self, request):
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.cell_id = get_random_cell_id()
+            order.save()
+            return redirect(f"/orders/{order.slug}/")
+        else:
+            return render(
+                request,
+                "orders/order_form.html",
+                {"form": form, "error": "Invalid form data"},
+            )
