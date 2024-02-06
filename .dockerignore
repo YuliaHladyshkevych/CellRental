@@ -1,0 +1,17 @@
+# Ignore Git-related files
+.git
+.github
+.gitignore
+
+# Ignore development and build files
+venv
+.env
+node_modules
+*.log
+*.tmp
+*.temp
+*.bak
+.vscode
+.idea
+__pycache__
+*.pyc

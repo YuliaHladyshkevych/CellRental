@@ -357,6 +357,9 @@ fabric.properties
 
 # Cython debug symbols
 
+# Celery stuff
+celerybeat-schedule.db
+
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
