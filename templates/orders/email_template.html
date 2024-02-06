@@ -1,0 +1,4 @@
+<h1>Order #{{ order.id }}</h1>
+<p>Rental start time: {{ order.start_datetime }}</p>
+<p>Cell #{{ order.cell_id }}</p>
+<a href="{{ BASE_URL }}{% url 'orders:order_detail' order.slug %}">Click on this link for details</a>

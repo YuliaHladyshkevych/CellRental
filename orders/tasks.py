@@ -14,7 +14,8 @@ def send_email_task(order_id):
     from_email = settings.EMAIL_HOST_USER
     to_email = [order.user_email]
     html_message = render_to_string(
-        "orders/email_template.html", {"order": order}
+        "orders/email_template.html",
+        {"order": order, "BASE_URL": settings.BASE_URL},
     )
 
     send_mail(
