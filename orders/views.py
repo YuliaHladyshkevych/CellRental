@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from orders.forms import OrderForm
 from orders.models import Order
 from orders.serializers import OrderSerializer
+from orders.tasks import send_email_task
 
 
 def get_random_cell_id():
@@ -75,6 +76,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
         if serializer.is_valid():
             serializer.save()
+            send_email_task.delay(serializer.instance.id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -91,6 +93,7 @@ class OrderView(View):
             order = form.save(commit=False)
             order.cell_id = get_random_cell_id()
             order.save()
+            send_email_task.delay(order.id)
             return redirect(f"/orders/{order.slug}/")
         else:
             return render(
