@@ -16,7 +16,10 @@ django-crispy-forms==2.1
 django-timezone-field==6.1.0
 djangorestframework==3.14.0
 idna==3.6
+iniconfig==2.0.0
 kombu==5.3.5
+packaging==23.2
+pluggy==1.4.0
 prompt-toolkit==3.0.43
 psycopg2-binary==2.9.9
 python-crontab==3.0.0

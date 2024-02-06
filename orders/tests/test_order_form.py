@@ -32,7 +32,7 @@ class OrderFormTest(TestCase):
     def test_end_date_before_start_date(self):
         form_data = {
             "user_email": "test@example.com",
-            "user_name": "John Doe",
+            "user_name": "User",
             "start_date": timezone.now() + timezone.timedelta(hours=4),
             "end_date": timezone.now() + timezone.timedelta(hours=2),
         }
